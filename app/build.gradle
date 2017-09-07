@@ -1,7 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 26
@@ -51,12 +50,4 @@ dependencies {
     implementation('com.squareup.retrofit2:converter-gson:2.3.0') {
         exclude group: 'com.google.code.gson'
     }
-
-    // parceler *note change annotationProcessor to kapt
-    compile 'org.parceler:parceler-api:1.1.9'
-    kapt 'org.parceler:parceler:1.1.9'
-}
-
-kapt {
-    generateStubs = true
 }

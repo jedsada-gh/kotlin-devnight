@@ -26,7 +26,7 @@ infix fun ImageView.loadImage(url: String?): Target<Drawable> = let {
 
 fun View.hide() = let { visibility = View.GONE }
 
-inline fun <reified A : Activity> Activity.naviagate(func: Intent.() -> Unit) {
+inline fun <reified A : Activity> Activity.navigate(func: Intent.() -> Unit) {
     val intent = Intent(this, A::class.java)
     intent.func()
     startActivity(intent)

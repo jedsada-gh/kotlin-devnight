@@ -7,20 +7,19 @@ import android.util.Log
 import android.widget.Toast
 import com.jedsada.workshopkoltincnx.R
 import com.jedsada.workshopkoltincnx.hide
-import com.jedsada.workshopkoltincnx.model.MovieDetailModel
 import com.jedsada.workshopkoltincnx.model.MovieModel
-import com.jedsada.workshopkoltincnx.naviagate
+import com.jedsada.workshopkoltincnx.navigate
 import com.jedsada.workshopkoltincnx.repository.MovieRepository
 import com.jedsada.workshopkoltincnx.ui.details.DetailActivity
 import com.jedsada.workshopkoltincnx.ui.main.adapter.MovieAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-import org.parceler.Parcels
 
 class MainActivity : MainView, AppCompatActivity() {
 
     private val movieAdapter: MovieAdapter by lazy { MovieAdapter() }
     private val mainController: MainController by lazy { MainController(this, MovieRepository()) }
-    private val KEY_LIST_MOVIE = "list_movie"
+    private val KEY_MODEL_MOVIE = "model_movie"
+    private var movieModel: MovieModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +32,7 @@ class MainActivity : MainView, AppCompatActivity() {
         movieAdapter.apply {
             movieItemOnClick = {
                 Log.d("POND", it.toString())
-                naviagate<DetailActivity> { }
+                navigate<DetailActivity> { putExtra(DetailActivity.KEY_DETAILS_MOVIE, it) }
             }
         }
         list_movie?.apply {
@@ -49,19 +48,21 @@ class MainActivity : MainView, AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        outState?.putParcelable(KEY_LIST_MOVIE, Parcels.wrap(movieAdapter.items))
+        outState?.putParcelable(KEY_MODEL_MOVIE, movieModel)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         super.onRestoreInstanceState(savedInstanceState)
-        val items = Parcels.unwrap<List<MovieDetailModel>>(savedInstanceState?.getParcelable(KEY_LIST_MOVIE))
-        items?.run {
+        movieModel = savedInstanceState?.getParcelable(KEY_MODEL_MOVIE)
+        movieModel?.listMovie?.run {
             hideDialog()
             movieAdapter.items = this
-        }
+        } ?: initialize()
     }
 
     override fun setMovieData(movieModel: MovieModel?) {
+        this.movieModel = movieModel
         movieAdapter.items = movieModel?.listMovie ?: listOf()
     }
 

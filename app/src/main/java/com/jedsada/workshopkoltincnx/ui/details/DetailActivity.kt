@@ -10,16 +10,22 @@ import kotlinx.android.synthetic.main.activity_detail.*
 class DetailActivity : AppCompatActivity() {
 
     companion object {
-        const val KEY_MOVIE_DATA = "data"
+        const val KEY_DETAILS_MOVIE = "details_movie"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         tv_name.text = extractDataFromIntent()?.title
         tv_des.text = extractDataFromIntent()?.overview
-        img_cover loadImage extractDataFromIntent()?.title
+        img_cover loadImage extractDataFromIntent()?.imageUrl
     }
 
-    private fun extractDataFromIntent(): MovieDetailModel? = null
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
+    private fun extractDataFromIntent(): MovieDetailModel? = intent.getParcelableExtra(KEY_DETAILS_MOVIE)
 }
